@@ -1,11 +1,11 @@
 {
-  "name": "knowledge-artisan-mcp",
+  "name": "turtleatlas-mcp",
   "version": "1.0.0",
   "description": "Generic MCP knowledge server — serve Markdown experts, journeys, and table schemas to any LLM",
   "main": "index.js",
   "type": "module",
   "bin": {
-    "knowledge-artisan-mcp": "./index.js"
+    "turtleatlas-mcp": "./index.js"
   },
   "scripts": {
     "start": "node index.js"
