@@ -1,0 +1,28 @@
+{
+  "name": "knowledge-artisan-mcp",
+  "version": "1.0.0",
+  "description": "Generic MCP knowledge server — serve Markdown experts, journeys, and table schemas to any LLM",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "knowledge-artisan-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.2",
+    "adm-zip": "^0.5.16",
+    "express": "^4.21.2"
+  },
+  "keywords": [
+    "mcp",
+    "server",
+    "model-context-protocol",
+    "knowledge-base",
+    "sql",
+    "rag"
+  ],
+  "author": "",
+  "license": "MIT"
+}
