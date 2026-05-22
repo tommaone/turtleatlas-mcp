@@ -1,4 +1,4 @@
-# knowledge-artisan-mcp
+# turtleatlas-mcp
 
 A generic MCP server that turns a folder of Markdown files and table schemas into a structured knowledge base for LLMs.
 
