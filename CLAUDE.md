@@ -2,7 +2,7 @@
 
 ## What This Is
 
-**knowledge-artisan-mcp** is a generic MCP (Model Context Protocol) server that serves structured Markdown knowledge to any LLM client. Point it at your database schema, domain expert files, and process documentation — the LLM gets it all via tool calls, without you needing to stuff it all into a system prompt.
+**turtleatlas-mcp** is a generic MCP (Model Context Protocol) server that serves structured Markdown knowledge to any LLM client. Point it at your database schema, domain expert files, and process documentation — the LLM gets it all via tool calls, without you needing to stuff it all into a system prompt.
 
 Works with any MCP-compatible client: TurtleQL, Claude Desktop, or any SDK that supports MCP tool use.
 
