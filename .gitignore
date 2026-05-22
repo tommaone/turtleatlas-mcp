@@ -1,0 +1,15 @@
+node_modules/
+*.log
+.env
+.env.local
+
+# Knowledge base content — user-specific, don't commit company data
+resources/experts/*.md
+!resources/experts/README.md
+resources/journeys/*.md
+!resources/journeys/README.md
+resources/tables.zip
+
+# OS
+.DS_Store
+Thumbs.db
