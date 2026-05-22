@@ -16,7 +16,7 @@ import {
   McpError,
 } from "@modelcontextprotocol/sdk/types.js";
 
-class KnowledgeArtisanMcpServer {
+class TurtleAtlasMcpServer {
   constructor() {
     const __filename = fileURLToPath(import.meta.url);
     this.baseDir = dirname(__filename);
@@ -25,7 +25,7 @@ class KnowledgeArtisanMcpServer {
 
     this.server = new Server(
       {
-        name: "knowledge-artisan-mcp-server",
+        name: "turtleatlas-mcp-server",
         version: "1.0.0",
       },
       {
@@ -245,7 +245,7 @@ class KnowledgeArtisanMcpServer {
           },
           {
             name: "list_experts",
-            description: "List all available expert knowledge files with names and descriptions. Call this to discover which domain experts are relevant to the user's question, then call get_expert to load one.",
+            description: "List all available expert knowledge files with names and descriptions. Call this to discover which domain experts are relevant to the user's question, then call get_expert to load the full detail.",
             inputSchema: {
               type: "object",
               properties: {},
@@ -268,7 +268,7 @@ class KnowledgeArtisanMcpServer {
           },
           {
             name: "list_journeys",
-            description: "List available detailed journey files. Journeys are deep-detail extracts of specific processes or workflows. Use when you need complete business rules, field validations, or step-level logic for a specific interaction. Optionally filter by domain.",
+            description: "List available detailed journey files. Journeys are deep-detail extracts of specific processes or workflows. Use when you need complete business rules, field validations, or state transitions.",
             inputSchema: {
               type: "object",
               properties: {
@@ -282,7 +282,7 @@ class KnowledgeArtisanMcpServer {
           },
           {
             name: "get_journey",
-            description: "Load the full content of a specific journey file by name, as returned by list_journeys. Journey files are much richer than expert files — load only what is directly relevant.",
+            description: "Load the full content of a specific journey file by name, as returned by list_journeys. Journey files are much richer than expert files — load only what is directly relevant to the conversation.",
             inputSchema: {
               type: "object",
               properties: {
@@ -781,7 +781,7 @@ class KnowledgeArtisanMcpServer {
   async runStdio() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error("knowledge-artisan-mcp server running on stdio");
+    console.error("turtleatlas-mcp server running on stdio");
   }
 
   async runHttp(port) {
@@ -792,7 +792,7 @@ class KnowledgeArtisanMcpServer {
     app.get('/health', (_req, res) => {
       res.json({
         status: 'healthy',
-        service: 'knowledge-artisan-mcp-server',
+        service: 'turtleatlas-mcp-server',
         version: '1.0.0',
         transport: 'Streamable HTTP',
         uptime: process.uptime(),
@@ -817,7 +817,7 @@ class KnowledgeArtisanMcpServer {
           if (sid) delete transports[sid];
         };
         const sessionServer = new Server(
-          { name: "knowledge-artisan-mcp-server", version: "1.0.0" },
+          { name: "turtleatlas-mcp-server", version: "1.0.0" },
           { capabilities: { tools: {} } }
         );
         this.setupToolHandlers(sessionServer);
@@ -852,7 +852,7 @@ class KnowledgeArtisanMcpServer {
 
     const host = process.env.HOST || '0.0.0.0';
     app.listen(port, host, () => {
-      console.error(`knowledge-artisan-mcp server (Streamable HTTP) listening on http://${host}:${port}/mcp`);
+      console.error(`turtleatlas-mcp server (Streamable HTTP) listening on http://${host}:${port}/mcp`);
     });
   }
 
@@ -872,5 +872,5 @@ class KnowledgeArtisanMcpServer {
   }
 }
 
-const server = new KnowledgeArtisanMcpServer();
+const server = new TurtleAtlasMcpServer();
 server.run().catch(console.error);
