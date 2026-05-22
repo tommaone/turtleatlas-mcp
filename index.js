@@ -42,7 +42,7 @@ class TurtleAtlasMcpServer {
     if (!this.tablesZip) {
       const zipPath = join(this.baseDir, 'resources', 'tables.zip');
       if (!existsSync(zipPath)) {
-        throw new Error(`Tables zip file not found at ${zipPath}`);
+        return null;
       }
       this.tablesZip = new AdmZip(zipPath);
     }
@@ -51,6 +51,7 @@ class TurtleAtlasMcpServer {
 
   readTableFromZip(tableName) {
     const zip = this.getTablesZip();
+    if (!zip) return null;
 
     let fileName = tableName.endsWith('.json') || tableName.endsWith('.JSON')
       ? tableName
@@ -78,6 +79,7 @@ class TurtleAtlasMcpServer {
 
   listTablesInZip() {
     const zip = this.getTablesZip();
+    if (!zip) return [];
     const entries = zip.getEntries();
 
     return entries
@@ -343,6 +345,9 @@ class TurtleAtlasMcpServer {
   handleListCategories(args) {
     try {
       const tableOverviewPath = join(this.baseDir, 'resources', 'table_overview.json');
+      if (!existsSync(tableOverviewPath)) {
+        return { content: [{ type: 'text', text: '' }] };
+      }
       let tableOverviewContent = readFileSync(tableOverviewPath, 'utf8');
 
       if (tableOverviewContent.charCodeAt(0) === 0xFEFF) {
@@ -382,6 +387,9 @@ class TurtleAtlasMcpServer {
       }
 
       const tableOverviewPath = join(this.baseDir, 'resources', 'table_overview.json');
+      if (!existsSync(tableOverviewPath)) {
+        return { content: [{ type: 'text', text: JSON.stringify({ tables: [], total_count: 0 }) }] };
+      }
       let tableOverviewContent = readFileSync(tableOverviewPath, 'utf8');
       if (tableOverviewContent.charCodeAt(0) === 0xFEFF) tableOverviewContent = tableOverviewContent.slice(1);
       const tableOverview = JSON.parse(tableOverviewContent);
@@ -458,26 +466,31 @@ class TurtleAtlasMcpServer {
       }
 
       const tableOverviewPath = join(this.baseDir, 'resources', 'table_overview.json');
+      if (!existsSync(tableOverviewPath)) {
+        return { content: [{ type: 'text', text: JSON.stringify({ tables: [], total_count: 0 }) }] };
+      }
       let tableOverviewContent = readFileSync(tableOverviewPath, 'utf8');
       if (tableOverviewContent.charCodeAt(0) === 0xFEFF) tableOverviewContent = tableOverviewContent.slice(1);
       const tableOverview = JSON.parse(tableOverviewContent);
 
-      const categoriesSet = new Set();
-      const matchingTables = [];
+      const filteredTables = [];
 
       if (tableOverview.files && Array.isArray(tableOverview.files)) {
         for (const file of tableOverview.files) {
-          if (file.categories) {
-            const fileCategories = Array.isArray(file.categories) ? file.categories : [file.categories];
-            fileCategories.forEach(cat => categoriesSet.add(cat));
-            if (fileCategories.some(cat => cat.toLowerCase() === category.toLowerCase())) {
-              const summary = file.summary || 'No summary available';
-              matchingTables.push({
-                filename: file.filename,
-                short_summary: summary.length > 150 ? summary.substring(0, 150) + '...' : summary,
-                categories: fileCategories
-              });
-            }
+          let fileCategories = file.categories;
+          if (typeof fileCategories === 'string') {
+            fileCategories = [fileCategories];
+          }
+          if (fileCategories && Array.isArray(fileCategories) && fileCategories.some(cat => cat.toLowerCase() === category.toLowerCase())) {
+            filteredTables.push({
+              filename: file.filename,
+              summary: file.summary || 'No summary available',
+              description: file.description || 'No description available',
+              categories: fileCategories
+            });
+          }
+        }
+      }
           }
         }
       }
@@ -529,6 +542,9 @@ class TurtleAtlasMcpServer {
       }
 
       const tableOverviewPath = join(this.baseDir, 'resources', 'table_overview.json');
+      if (!existsSync(tableOverviewPath)) {
+        return { content: [{ type: 'text', text: JSON.stringify({ tables: [], total_count: 0 }) }] };
+      }
       let tableOverviewContent = readFileSync(tableOverviewPath, 'utf8');
       if (tableOverviewContent.charCodeAt(0) === 0xFEFF) tableOverviewContent = tableOverviewContent.slice(1);
       const tableOverview = JSON.parse(tableOverviewContent);
