@@ -3,10 +3,10 @@
 #
 # Runs the full test suite against a running MCP server.
 # Usage:
-#   ./tests/run.sh                     # run all tests
-#   ./tests/run.sh t01 t02             # run specific tests
+#   ./tests/run.sh                         # run all tests
+#   ./tests/run.sh t01 t02                 # run specific infrastructure tests
+#   ./tests/run.sh expert/grey-knights     # run a specific content test
 #   SERVER=http://other:3456/mcp ./tests/run.sh   # custom server URL
-#   WATCH=1 ./tests/run.sh             # watch mode (re-run on test file changes)
 set -euo pipefail
 
 SERVER="${SERVER:-http://localhost:3456/mcp}"
@@ -66,7 +66,11 @@ if [ $# -gt 0 ]; then
     tests+=("$SCRIPT_DIR/${arg}.sh")
   done
 else
+  # Run infrastructure tests + all per-expert content tests
   tests=("$SCRIPT_DIR"/t*.sh)
+  for f in "$SCRIPT_DIR"/expert/*.sh; do
+    [ -f "$f" ] && tests+=("$f")
+  done
 fi
 
 echo "═══════════════════════════════════════════"

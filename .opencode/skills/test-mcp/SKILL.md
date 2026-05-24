@@ -343,7 +343,47 @@ In `claude_desktop_config.json`:
 
 See sections 3–4 above. The raw curl approach is the most reliable way to test — it isolates protocol issues from SDK bugs.
 
-## 10. Sanity Checklist
+## 10. Per-Expert Content Tests
+
+Every expert file in `resources/experts/` should have a corresponding test in `tests/expert/` that verifies the MCP delivers its content correctly.
+
+**Pattern:**
+```
+tests/
+├── t01_basics.sh           # infrastructure (server health)
+├── t02_session.sh          # session lifecycle
+├── t03_tools.sh            # all 10 tools
+├── ...
+└── expert/
+    ├── example-expert.sh   # asserts example-expert.md content delivery
+    └── <new-expert>.sh     # add when adding a new expert file
+```
+
+**What content tests assert:**
+- Key headings and structure are correct
+- NOT numerical accuracy — that's the expert file's job, not the test's
+
+**Creating a new content test:**
+
+```bash
+#!/bin/bash
+source "$(dirname "$0")/../lib.sh"
+
+echo "=== Content: <expert-name> ==="
+
+sid=$(init_session)
+[ "$sid" = "__FAIL__" ] && { echo "  FAIL: init_session"; exit 1; }
+
+resp=$(call_tool "$sid" '{"jsonrpc":"2.0","method":"tools/call",...')
+# ... assert_contains / assert_eq calls
+
+close_session "$sid"
+summary
+```
+
+Content tests run automatically via `./tests/run.sh` (no args).
+
+## 11. Sanity Checklist
 
 - [ ] `GET /health` returns 200
 - [ ] `POST /mcp` with initialize returns `mcp-session-id` header
